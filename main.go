@@ -3,10 +3,11 @@ package main
 import (
 	"fmt"
 	"github.com/gocolly/colly"
+	"strings"
 )
 
 type Films struct {
-	ID    int     `json:"ID"`
+	Rank  int     `json:"Rank"`
 	Title string  `json:"Title"`
 	Year  string  `json:"Year"`
 	Rate  float32 `json:"Rate"`
@@ -23,13 +24,18 @@ func scrapPage(url string) {
 
 	c.OnHTML("tbody > tr", func(e *colly.HTMLElement) {
 		workString := e.DOM.Find("td:nth-child(2)").Text()
-		var idFilm string
-		idFilm = string(workString[0] + workString[1] + workString[2])
+		var rankFilm string
+		workString = strings.ReplaceAll(workString, "\n", " ")
+		workString = strings.ReplaceAll(workString, "       ", " ")
+		workString = strings.ReplaceAll(workString, "   ", " ")
+		workString = strings.ReplaceAll(workString, "   ", "")
+
+		rankFilm = workString
 		//titleFilm := e.DOM.Find("td:nth-child(2)").Text()
 		//yearFilm := e.DOM.Find("td:nth-child(3)").Text()
 		//rateFilm := e.DOM.Find("td:nth-child(3)").Text()
 		//fmt.Print(workString)
-		fmt.Println(idFilm)
+		fmt.Println(rankFilm)
 	})
 
 	c.Visit(url)
