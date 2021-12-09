@@ -29,7 +29,6 @@ func scrapPage(url string) {
 		workString = strings.ReplaceAll(workString, "       ", " ")
 		workString = strings.ReplaceAll(workString, "   ", " ")
 		workString = strings.ReplaceAll(workString, "   ", "")
-
 		rankFilm = workString
 		//titleFilm := e.DOM.Find("td:nth-child(2)").Text()
 		//yearFilm := e.DOM.Find("td:nth-child(3)").Text()
