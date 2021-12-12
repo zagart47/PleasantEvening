@@ -3,20 +3,23 @@ package main
 import (
 	"fmt"
 	"github.com/gocolly/colly"
+	"math/rand"
 	"strings"
+	"time"
 )
 
 type Films struct {
-	Rank  int     `json:"Rank"`
-	Title string  `json:"Title"`
-	Year  string  `json:"Year"`
-	Rate  float32 `json:"Rate"`
+	Title string
 }
 
 var filmCollection = []Films{}
 
 func main() {
 	scrapPage("https://www.imdb.com/chart/top/?ref_=nv_mv_250")
+	rand.Seed(time.Now().UnixNano())
+	output := filmCollection[rand.Intn(250)]
+	fmt.Println(output)
+	fmt.Scanln()
 
 }
 func scrapPage(url string) {
@@ -24,17 +27,15 @@ func scrapPage(url string) {
 
 	c.OnHTML("tbody > tr", func(e *colly.HTMLElement) {
 		workString := e.DOM.Find("td:nth-child(2)").Text()
-		var rankFilm string
+		var film string
 		workString = strings.ReplaceAll(workString, "\n", " ")
+		workString = strings.Replace(workString, " ", "", 2)
+		workString = strings.Replace(workString, "*. ", "", 2)
 		workString = strings.ReplaceAll(workString, "       ", " ")
 		workString = strings.ReplaceAll(workString, "   ", " ")
 		workString = strings.ReplaceAll(workString, "   ", "")
-		rankFilm = workString
-		//titleFilm := e.DOM.Find("td:nth-child(2)").Text()
-		//yearFilm := e.DOM.Find("td:nth-child(3)").Text()
-		//rateFilm := e.DOM.Find("td:nth-child(3)").Text()
-		//fmt.Print(workString)
-		fmt.Println(rankFilm)
+		film = workString
+		filmCollection = append(filmCollection, Films{film})
 	})
 
 	c.Visit(url)
